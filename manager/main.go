@@ -422,13 +422,22 @@ func (m *Manager) allChainsOnline() bool {
 // SendMinedHeader sends the mined block to its mining client with the transactions, uncles, and receipts.
 func (m *Manager) SendMinedHeader(mined int, header *types.Header, wg *sync.WaitGroup) {
 	if mined == 0 {
-		m.sliceClients.prime.ReceiveMinedHeader(context.Background(), header)
+		err := m.sliceClients.prime.ReceiveMinedHeader(context.Background(), header)
+		if err != nil {
+			fmt.Println("error submitting block: ", err)
+		}
 	}
 	if mined == 1 {
-		m.sliceClients.region.ReceiveMinedHeader(context.Background(), header)
+		err := m.sliceClients.region.ReceiveMinedHeader(context.Background(), header)
+		if err != nil {
+			fmt.Println("error submitting block: ", err)
+		}
 	}
 	if mined == 2 {
-		m.sliceClients.zone.ReceiveMinedHeader(context.Background(), header)
+		err := m.sliceClients.zone.ReceiveMinedHeader(context.Background(), header)
+		if err != nil {
+			fmt.Println("error submitting block: ", err)
+		}
 	}
 	defer wg.Done()
 }
